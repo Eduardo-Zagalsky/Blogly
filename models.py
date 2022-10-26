@@ -11,11 +11,11 @@ def connect_db(app):
 class User(db.Model):
     __tablename__ = "users"
 
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    first_name = db.Column(db.String(10), nullable=False)
+    last_name = db.Column(db.String(10), nullable=False)
+    image_url = db.Column(db.Text, unique=True)
 
-def __repr__(self):
-    s = self
-    if s.img:
-        has_img = True
-    else:
-        has_img = False
-    return f"<id = {s.id} name = {s.firstName} {s.lastName} img = {has_img}>"
+    def __repr__(self):
+        s = self
+        return f"<id = {s.id} name = {s.first_name} {s.last_name}>"
