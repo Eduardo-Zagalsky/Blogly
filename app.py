@@ -21,42 +21,53 @@ def root():
 
 @app.route("/users")
 def users():
-    # get users from database
-    return render_template("users.html")
+    users = User.query.all()
+    return render_template("users.html", users=users)
 
 
-@app.route("/users/new")  # GET
+@app.route("/users/new")
 def get_form():
     return render_template("new.html")
 
 
-@app.route("/users/new")  # POST
+@app.route("/users/new", methods=["POST"])
 def add_user():
     first_name = request.form["firstName"]
     last_name = request.form["lastName"]
     img_url = request.form["imgUrl"]
-    # add to database
+
+    new_user = User(first_name=first_name,
+                    last_name=last_name, image_url=img_url)
+    db.session.add(new_user)
+    db.session.commit()
     return redirect("/users")
 
 
-@app.route("/users/<int:user_id>")  # GET
+@app.route("/users/<int:user_id>")
 def detail_page(user_id):
-    return render_template("detail.html")
+    user = User.query.get_or_404(user_id)
+    return render_template("detail.html", user=user)
 
 
-@app.route("/users/<int:user_id>/edit")  # GET
+@app.route("/users/<int:user_id>/edit")
 def get_user(user_id):
-    return render_template("edit.html")
+    user = User.query.get_or_404(user_id)
+    return render_template("edit.html", user=user)
 
 
-@app.route("/users/<int:user_id>/edit")  # POST
+@app.route("/users/<int:user_id>/edit", methods=["POST"])
 def edit_user(user_id):
-    first_name = request.form["firstName"]
-    last_name = request.form["lastName"]
-    img_url = request.form["imgUrl"]
+    user = User.query.get_or_404(user_id)
+    user.first_name = request.form["firstName"]
+    user.last_name = request.form["lastName"]
+    user.image_url = request.form["imgUrl"]
+    db.session.commit()
     return redirect("/users")
 
 
-@app.route("/users/<int:user_id>/delete")  # POST
-def delete_user():
+@app.route("/users/<int:user_id>/delete", methods=["POST"])
+def delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
     return redirect("/users")
