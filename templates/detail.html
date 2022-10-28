@@ -1,12 +1,29 @@
 {% extends 'base.html' %}
 {% block title %}User Detail{% endblock %}
 {% block content %}
-<img src="{{user. image_url}}" alt="{{user.first_name}} {{user.last_name}}">
-<h1>{{user.first_name}} {{user.last_name}}</h1>
-<form action="/users/{{user.id}}/edit">
-    <button name="edit">edit</button>
-</form>
-<form action="/users/{{user.id}}/delete" method="POST">
-    <button name="delete">delete</button>
-</form>
+<div class="container">
+    <div class="row">
+        <div class="col text-center">
+            <img src="{{user. image_url}}" class="rounded" alt="{{user.first_name}} {{user.last_name}}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <h1>{{user.first_name}} {{user.last_name}}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <form action="/users/{{user.id}}/edit">
+                <button class="btn btn-outline-primary btn-lg btn-block">Edit</button>
+            </form>
+        </div>
+        <div class="col text-center">
+            <form action="/users/{{user.id}}/delete" method="POST">
+                <button class="btn btn-outline-danger btn-lg btn-block">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
