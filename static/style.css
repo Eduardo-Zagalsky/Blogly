@@ -1,6 +1,6 @@
 img {
-    height: 500px;
-    width: 500px;
+    max-width: 375px;
+    display: inline;
 }
 
 h1 {
@@ -9,4 +9,8 @@ h1 {
 
 body {
     font-size: 1.15em;
+}
+
+form {
+    display: inline;
 }
