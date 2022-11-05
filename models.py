@@ -37,4 +37,4 @@ class Post(db.Model):
 
     @property
     def time_date(self):
-        return self.created_at.strftime("%m/%d/%Y, %H:%M:%S")
+        return self.created_at.strftime("%m/%d/%Y, %I:%M %p")
