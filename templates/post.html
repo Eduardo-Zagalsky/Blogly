@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Posts{% endblock %}
+{% block content %}
+<a href="/users">Users</a>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Content</th>
+            <th scope="col">User</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for post in posts%}
+        <tr>
+            <td>{{post.title}}</td>
+            <td>{{post.content}}</td>
+            <td>{{post.user.full_name}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
