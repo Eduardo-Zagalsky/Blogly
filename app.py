@@ -4,7 +4,7 @@ from models import db, connect_db, User, Post
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///Blogly'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = "secret"
@@ -71,3 +71,57 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()
     return redirect("/users")
+
+
+@app.route("/users/<int:user_id>/posts/new")
+def get_post_form(user_id):
+    user = User.query.get_or_404(user_id)
+    return render_template("post-form.html", user=user)
+
+
+@app.route("/users/<int:user_id>/posts/new", methods=["POST"])
+def create_post(user_id):
+    user = User.query.get_or_404(user_id)
+    title = request.form["title"]
+    content = request.form["content"]
+
+    new_post = Post(title=title, content=content, user=user)
+    db.session.add(new_post)
+    db.session.commit()
+    return redirect(f"/users/{user.id}")
+
+
+@app.route("/posts")
+def posts():
+    posts = Post.query.all()
+    return render_template("post.html", posts=posts)
+
+
+@app.route("/posts/<int:post_id>")
+def post_info(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template("post-info.html", post=post)
+
+
+@app.route("/posts/<int:post_id>/edit")
+def get_post_edit(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template("post-edit.html", post=post)
+
+
+@app.route("/posts/<int:post_id>/edit", methods=["POST"])
+def edit_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    post.title = request.form["title"]
+    post.content = request.form["content"]
+    db.session.commit()
+    return redirect(f"/users/{post.user_id}")
+
+
+@app.route("/posts/<int:post_id>/delete", methods=["POST"])
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    user = post.user_id
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(f"/users/{user}")
