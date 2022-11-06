@@ -58,7 +58,7 @@ class BlogTest(TestCase):
         with app.test_client() as client:
             posts = Post.query.all()
             for post in posts:
-                resp = client.get(f"/posts/{post.post_id}")
+                resp = client.get(f"/posts/{post.id}")
                 html = resp.get_data(as_text=True)
                 self.assertEqual(resp.status_code, 200)
                 self.assertIn(

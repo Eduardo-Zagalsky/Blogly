@@ -28,7 +28,7 @@ class User(db.Model):
 class Post(db.Model):
     __tablename__ = "posts"
 
-    post_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.Text, nullable=False, unique=True)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False,
@@ -38,3 +38,4 @@ class Post(db.Model):
     @property
     def time_date(self):
         return self.created_at.strftime("%m/%d/%Y, %I:%M %p")
+
