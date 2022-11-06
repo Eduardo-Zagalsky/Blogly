@@ -13,6 +13,8 @@ debug = DebugToolbarExtension(app)
 
 connect_db(app)
 
+# USER _________________________________________________________________________________________________________________________________
+
 
 @app.route("/")
 def root():
@@ -72,14 +74,16 @@ def delete_user(user_id):
     db.session.commit()
     return redirect("/users")
 
+# POSTS ________________________________________________________________________________________________________________
 
-@app.route("/users/<int:user_id>/posts/new")
+
+@app.route("/users/<int:user_id>/posts/new")  # Add Tags
 def get_post_form(user_id):
     user = User.query.get_or_404(user_id)
     return render_template("post-form.html", user=user)
 
 
-@app.route("/users/<int:user_id>/posts/new", methods=["POST"])
+@app.route("/users/<int:user_id>/posts/new", methods=["POST"])  # Receive Tags
 def create_post(user_id):
     user = User.query.get_or_404(user_id)
     title = request.form["title"]
@@ -97,19 +101,19 @@ def posts():
     return render_template("post.html", posts=posts)
 
 
-@app.route("/posts/<int:post_id>")
+@app.route("/posts/<int:post_id>")  # Add relevant Tags
 def post_info(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template("post-info.html", post=post)
 
 
-@app.route("/posts/<int:post_id>/edit")
+@app.route("/posts/<int:post_id>/edit")  # Add Tags
 def get_post_edit(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template("post-edit.html", post=post)
 
 
-@app.route("/posts/<int:post_id>/edit", methods=["POST"])
+@app.route("/posts/<int:post_id>/edit", methods=["POST"])  # Receive Tags
 def edit_post(post_id):
     post = Post.query.get_or_404(post_id)
     post.title = request.form["title"]
@@ -125,3 +129,5 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     return redirect(f"/users/{user}")
+
+# TAGS ___________________________________________________________________________________________________________
