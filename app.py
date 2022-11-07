@@ -131,3 +131,38 @@ def delete_post(post_id):
     return redirect(f"/users/{user}")
 
 # TAGS ___________________________________________________________________________________________________________
+
+
+@app.route("/tags")
+def tags():
+    return render_template("tags.html")
+
+
+@app.route("/tags/<int:tag_id>")
+def tag_info(tag_id):
+    return render_template("tag-info.html")
+
+
+@app.route("/tags/new")
+def tag_form():
+    return render_template("tag-form.html")
+
+
+@app.route("/tags/new", methods=["POST"])
+def new_tag():
+    return redirect("/tags")
+
+
+@app.route("/tags/<int:tag_id>/edit")
+def edit_tag(tag_id):
+    return render_template("tag-edit.html")
+
+
+@app.route("/tags/<int:tag_id>/edit", methods=["POST"])
+def edited_tag(tag_id):
+    return redirect("/tags")
+
+
+@app.route("/tags/<int:tag_id>/delete", methods=["POST"])
+def delete_tag(tag_id):
+    return redirect("/tags")
