@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, request
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 
 app = Flask(__name__)
 
@@ -135,12 +135,14 @@ def delete_post(post_id):
 
 @app.route("/tags")
 def tags():
-    return render_template("tags.html")
+    tags = Tag.query.all()
+    return render_template("tags.html", tags=tags)
 
 
 @app.route("/tags/<int:tag_id>")
 def tag_info(tag_id):
-    return render_template("tag-info.html")
+    tag = Tag.query.get_or_404(tag_id)
+    return render_template("tag-info.html", tag=tag)
 
 
 @app.route("/tags/new")
@@ -150,19 +152,30 @@ def tag_form():
 
 @app.route("/tags/new", methods=["POST"])
 def new_tag():
+    name = request.form["name"]
+    new_tag = Tag(name=name)
+    db.session.add(new_tag)
+    db.session.commit()
     return redirect("/tags")
 
 
 @app.route("/tags/<int:tag_id>/edit")
 def edit_tag(tag_id):
-    return render_template("tag-edit.html")
+    tag = Tag.query.get_or_404(tag_id)
+    return render_template("tag-edit.html", tag=tag)
 
 
 @app.route("/tags/<int:tag_id>/edit", methods=["POST"])
 def edited_tag(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+    tag.name = request.form["name"]
+    db.session.commit()
     return redirect("/tags")
 
 
 @app.route("/tags/<int:tag_id>/delete", methods=["POST"])
 def delete_tag(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+    db.session.delete(tag)
+    db.session.commit()
     return redirect("/tags")
