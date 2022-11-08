@@ -3,16 +3,16 @@
 {% block content %}
 <h1>{{tag.name}}</h1>
 <ul>
-    {% for post in posttag.post_id %}
+    {% for post in tag.post %}
     <li>
-        <a href="/posts/{{posttag.post_id}}">{{posttag.tag.name}}</a>
+        <a href="/posts/{{post.id}}">{{post.name}}</a>
     </li>
     {% endfor %}
 </ul>
-<form action="/tags/{{posttag.tag_id}}/edit">
+<form action="/tags/{{tag.id}}/edit">
     <button class="btn btn-outline-success btn-lg btn-block">Edit</button>
 </form>
-<form action="/tags/{{posttag.tag_id}}/delete">
+<form action="/tags/{{tag.id}}/delete">
     <button class="btn btn-outline-danger btn-lg btn-block">Delete</button>
 </form>
 {% endblock %}
