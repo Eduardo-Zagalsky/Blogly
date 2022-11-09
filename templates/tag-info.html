@@ -1,18 +1,21 @@
 {% extends 'base.html' %}
 {% block title %}{{tag.name}}{% endblock %}
 {% block content %}
+<form action="/tags">
+    <button class="btn btn-outline-secondary btn-sm">Return to Tags</button>
+</form>
 <h1>{{tag.name}}</h1>
 <ul>
     {% for post in tag.post %}
     <li>
-        <a href="/posts/{{post.id}}">{{post.name}}</a>
+        <a href="/posts/{{post.id}}">{{post.title}}</a>
     </li>
     {% endfor %}
 </ul>
 <form action="/tags/{{tag.id}}/edit">
     <button class="btn btn-outline-success btn-lg btn-block">Edit</button>
 </form>
-<form action="/tags/{{tag.id}}/delete">
+<form action="/tags/{{tag.id}}/delete" method="post">
     <button class="btn btn-outline-danger btn-lg btn-block">Delete</button>
 </form>
 {% endblock %}
