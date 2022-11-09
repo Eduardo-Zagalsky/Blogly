@@ -77,19 +77,24 @@ def delete_user(user_id):
 # POSTS ________________________________________________________________________________________________________________
 
 
-@app.route("/users/<int:user_id>/posts/new")  # Add Tags
+@app.route("/users/<int:user_id>/posts/new")
 def get_post_form(user_id):
     user = User.query.get_or_404(user_id)
-    return render_template("post-form.html", user=user)
+    tags = Tag.query.all()
+    return render_template("post-form.html", user=user, tags=tags)
 
 
-@app.route("/users/<int:user_id>/posts/new", methods=["POST"])  # Receive Tags
+# Be more efficient
+@app.route("/users/<int:user_id>/posts/new", methods=["POST"])
 def create_post(user_id):
+    tag_ids = []
     user = User.query.get_or_404(user_id)
-    title = request.form["title"]
-    content = request.form["content"]
-
-    new_post = Post(title=title, content=content, user=user)
+    tag_list = request.form.getlist("tags")
+    for id in tag_list:
+        tag_ids.append(int(id))
+    tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
+    new_post = Post(
+        title=request.form["title"], content=request.form["content"], user=user, tags=tags)
     db.session.add(new_post)
     db.session.commit()
     return redirect(f"/users/{user.id}")
@@ -101,23 +106,29 @@ def posts():
     return render_template("post.html", posts=posts)
 
 
-@app.route("/posts/<int:post_id>")  # Add relevant Tags
+@app.route("/posts/<int:post_id>")
 def post_info(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template("post-info.html", post=post)
 
 
-@app.route("/posts/<int:post_id>/edit")  # Add Tags
+@app.route("/posts/<int:post_id>/edit")
 def get_post_edit(post_id):
     post = Post.query.get_or_404(post_id)
-    return render_template("post-edit.html", post=post)
+    tags = Tag.query.all()
+    return render_template("post-edit.html", post=post, tags=tags)
 
 
-@app.route("/posts/<int:post_id>/edit", methods=["POST"])  # Receive Tags
+@app.route("/posts/<int:post_id>/edit", methods=["POST"])
 def edit_post(post_id):
+    tag_ids = []
     post = Post.query.get_or_404(post_id)
     post.title = request.form["title"]
     post.content = request.form["content"]
+    tag_list = request.form.getlist("tags")
+    for id in tag_list:
+        tag_ids.append(int(id))
+    post.tags = Tag.query.filter(Tag.id.in_(tag_ids)).all()
     db.session.commit()
     return redirect(f"/users/{post.user_id}")
 
@@ -125,10 +136,9 @@ def edit_post(post_id):
 @app.route("/posts/<int:post_id>/delete", methods=["POST"])
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
-    user = post.user_id
     db.session.delete(post)
     db.session.commit()
-    return redirect(f"/users/{user}")
+    return redirect(f"/users/{post.user_id}")
 
 # TAGS ___________________________________________________________________________________________________________
 
